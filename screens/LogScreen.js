@@ -13,7 +13,7 @@ const LogScreen = ({ navigation }) => {
     const optionKickingIn = () => {
         Animated.timing(optionAnim, {
             toValue : 4,
-            duration: 888,
+            duration: 333,
             useNativeDriver: false
         }).start();
     }
