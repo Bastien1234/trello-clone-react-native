@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     header: {
         flexDirection: 'row',
         backgroundColor: constants.blue,
-        height: 100,
+        height: 70,
         alignItems: 'center',
     },
 
@@ -46,12 +46,14 @@ const styles = StyleSheet.create({
         tintColor: "white",
         marginLeft: 10,
         marginRight: 10,
+        alignSelf: "center"
     },
 
     title: {
         color: "white",
         flex: 1,
         fontSize: 25,
-        marginLeft: 20
+        marginLeft: 20,
+        alignSelf: "center"
     },
 })
