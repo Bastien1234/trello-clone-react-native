@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, TextInput, Pressable, Animated } from 'react-native';
+import { StyleSheet, Text, View, Image, TextInput, Pressable, Animated, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import constants from '../constants/constants';
 import HeaderScreen from './HeaderScreen';
@@ -43,14 +43,21 @@ const WorkspaceScreen = ({ navigation }) => {
                 showOptions={showOptions} 
                 setShowOptions={setShowOptions}
                 optionKickingIn={optionKickingIn}/>
-            <View style={styles.mainBody}>
+            <ScrollView style={styles.mainBody} horizontal={true}>
                 {
                     database["containers"] ? 
                     
                     database.containers.map((cont, idx) => {
                         return(
                             <View style={styles.card} key={idx}>
-                                <Text>{cont.title}</Text>
+                                <Text
+                                    style={{
+                                        marginLeft: 10,
+                                        fontSize: 17,
+                                        marginTop: 10,
+                                        marginBottom: 20
+                                    }}
+                                >{cont.title}</Text>
                                 <View>
                                     {
                                         cont.cards.map((card, cardIdx) => {
@@ -66,16 +73,40 @@ const WorkspaceScreen = ({ navigation }) => {
                                                 }
                                             }
                                             return(
-                                                <View key={cardIdx}>
-                                                    <Text>{card.cardTitle}</Text>
-                                                    <Text>boxes : {actualCheckedBoxes}/{totalCheckBoxes}</Text>
+                                                <View 
+                                                    key={cardIdx}
+                                                    style={{
+                                                        backgroundColor: "white",
+                                                        width: "95%",
+                                                        alignSelf: "center",
+                                                        borderRadius: 5,
+                                                        marginBottom: 5
+                                                    }}>
+                                                    <Text style={{marginLeft: 10, marginTop: 8}}>{card.cardTitle}</Text>
+                                                    <View style={{
+                                                        flexDirection: "row"
+                                                    }}>
+                                                        <Image 
+                                                            source={require('./../assets/svg/check-box.png')}
+                                                            style={{
+                                                                height: 15, width: 15, marginLeft: 30
+                                                            }}/>
+                                                        <Text style={{fontSize: 15, marginLeft: 15, marginBottom: 8}}>{actualCheckedBoxes}/{totalCheckBoxes}</Text>
+                                                    </View>
+                                                    
                                                 </View>
                                                 )
                                         })
                                     }
                                 </View>
-                                <Pressable>
-                                    <Text>+ Ajouter une carte</Text>
+                                <Pressable style={{
+                                    marginTop: 25,
+                                    marginBottom: 15
+                                }}>
+                                    <Text style={{
+                                        marginLeft: 10,
+                                        color: "green"
+                                    }}>+ Ajouter une carte</Text>
                                 </Pressable>
 
                             </View>
@@ -84,7 +115,7 @@ const WorkspaceScreen = ({ navigation }) => {
 
                     : null
                 }
-            </View>
+            </ScrollView>
 
             { showOptions === true ? 
                 <OptionScreen 
@@ -106,16 +137,17 @@ const styles = StyleSheet.create({
     },
 
     mainBody: {
-        flex: 1,
-        backgroundColor: "white"
+        // flex: 1,i
+        backgroundColor: "white",
     },
 
     card: {
         backgroundColor: "lightgrey",
-        width: "70%",
+        width: 300,
         marginLeft: 20,
         marginRight: 5,
         marginTop: 15,
-        borderRadius: 5
+        borderRadius: 5,
+        height: 225
     }
 })

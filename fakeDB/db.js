@@ -8,7 +8,7 @@ const DB = [
                 name: "Espace 1",
                 containers: [
                     {
-                        title: "choses à faire",
+                        title: "Choses à faire",
                         cards: [
                             {
                                 cardTitle: "truc cool",
@@ -26,10 +26,164 @@ const DB = [
                                         done: true
                                     }
                                 ]
-                            }
+                            },
+
+                            {
+                                cardTitle: "truc aussi cool",
+                                text: "sdkjfhskdfjhsdkfjhsdkfjhsdfjdsfh",
+                                members: [],
+                                startDate: "",
+                                endDate: "",
+                                checklist: [
+                                    {
+                                        title: "truc à faire 1",
+                                        done: true
+                                    },
+                                    {
+                                        title: "truc à faire 2",
+                                        done: true
+                                    }
+                                ]
+                            },
+
+
                         ]
                         
-                    }
+                    },
+
+                    {
+                        title: "En cours",
+                        cards: [
+                            {
+                                cardTitle: "truc cool",
+                                text: "sdkjfhskdfjhsdkfjhsdkfjhsdfjdsfh",
+                                members: [],
+                                startDate: "",
+                                endDate: "",
+                                checklist: [
+                                    {
+                                        title: "truc à faire 1",
+                                        done: false
+                                    },
+                                    {
+                                        title: "truc à faire 2",
+                                        done: true
+                                    }
+                                ]
+                            },
+
+                            {
+                                cardTitle: "truc aussi cool",
+                                text: "sdkjfhskdfjhsdkfjhsdkfjhsdfjdsfh",
+                                members: [],
+                                startDate: "",
+                                endDate: "",
+                                checklist: [
+                                    {
+                                        title: "truc à faire 1",
+                                        done: true
+                                    },
+                                    {
+                                        title: "truc à faire 2",
+                                        done: true
+                                    }
+                                ]
+                            },
+
+                            
+                        ]
+                        
+                    },
+
+                    {
+                        title: "En cours",
+                        cards: [
+                            {
+                                cardTitle: "truc cool",
+                                text: "sdkjfhskdfjhsdkfjhsdkfjhsdfjdsfh",
+                                members: [],
+                                startDate: "",
+                                endDate: "",
+                                checklist: [
+                                    {
+                                        title: "truc à faire 1",
+                                        done: false
+                                    },
+                                    {
+                                        title: "truc à faire 2",
+                                        done: true
+                                    }
+                                ]
+                            },
+
+                            {
+                                cardTitle: "truc aussi cool",
+                                text: "sdkjfhskdfjhsdkfjhsdkfjhsdfjdsfh",
+                                members: [],
+                                startDate: "",
+                                endDate: "",
+                                checklist: [
+                                    {
+                                        title: "truc à faire 1",
+                                        done: true
+                                    },
+                                    {
+                                        title: "truc à faire 2",
+                                        done: true
+                                    }
+                                ]
+                            },
+
+                            
+                        ]
+                        
+                    },
+
+                    {
+                        title: "En cours",
+                        cards: [
+                            {
+                                cardTitle: "truc cool",
+                                text: "sdkjfhskdfjhsdkfjhsdkfjhsdfjdsfh",
+                                members: [],
+                                startDate: "",
+                                endDate: "",
+                                checklist: [
+                                    {
+                                        title: "truc à faire 1",
+                                        done: false
+                                    },
+                                    {
+                                        title: "truc à faire 2",
+                                        done: true
+                                    }
+                                ]
+                            },
+
+                            {
+                                cardTitle: "truc aussi cool",
+                                text: "sdkjfhskdfjhsdkfjhsdkfjhsdfjdsfh",
+                                members: [],
+                                startDate: "",
+                                endDate: "",
+                                checklist: [
+                                    {
+                                        title: "truc à faire 1",
+                                        done: true
+                                    },
+                                    {
+                                        title: "truc à faire 2",
+                                        done: true
+                                    }
+                                ]
+                            },
+
+                            
+                        ]
+                        
+                    },
+
+                    
                 ]
         
             },
