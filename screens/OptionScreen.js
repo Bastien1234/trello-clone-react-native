@@ -20,7 +20,7 @@ const OptionScreen = ({ navigation, showOptions, setShowOptions, optionAnim }) =
 
     const touchProps = {
         activeOpacity: 1,
-        underlayColor: 'grey',
+        underlayColor: 'lightgrey',
         style: styles.btnNormal,
         // onHideUnderlay: () => setIsPress(false),
         // onShowUnderlay: () => setIsPress(true),

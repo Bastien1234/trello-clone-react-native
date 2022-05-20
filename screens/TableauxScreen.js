@@ -16,7 +16,7 @@ const LogScreen = ({ navigation }) => {
     const optionKickingIn = () => {
         Animated.timing(optionAnim, {
             toValue : 4,
-            duration: 333,
+            duration: 1000,
             useNativeDriver: false
         }).start();
     }

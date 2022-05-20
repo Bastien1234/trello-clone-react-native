@@ -10,6 +10,7 @@ import DB from './../fakeDB/db';
 const WorkspaceScreen = ({ navigation }) => {
 
     const [database, setDatabase] = useState({});
+    const [addingCard, setAddingCard] = useState(true);
 
     let SELECTED = "Espace 1" // to change that shit please !!!
 
@@ -43,6 +44,7 @@ const WorkspaceScreen = ({ navigation }) => {
                 showOptions={showOptions} 
                 setShowOptions={setShowOptions}
                 optionKickingIn={optionKickingIn}/>
+            <View style={styles.ScrollViewContainer}>
             <ScrollView style={styles.mainBody} horizontal={true}>
                 {
                     database["containers"] ? 
@@ -50,14 +52,18 @@ const WorkspaceScreen = ({ navigation }) => {
                     database.containers.map((cont, idx) => {
                         return(
                             <View style={styles.card} key={idx}>
-                                <Text
-                                    style={{
-                                        marginLeft: 10,
-                                        fontSize: 17,
-                                        marginTop: 10,
-                                        marginBottom: 20
-                                    }}
-                                >{cont.title}</Text>
+                                <View style={{flexDirection: "row", alignItems: "center", justifyContent: "space-between"}}>
+                                    <Text
+                                        style={{
+                                            marginLeft: 10,
+                                            fontSize: 17,
+                                            marginTop: 10,
+                                            marginBottom: 20
+                                        }}
+                                    >{cont.title}</Text>
+                                    <Image source={require('./../assets/svg/cancel.png')} style={{height: 20, width: 20, marginRight: 15}}/>
+                                </View>
+                                
                                 <View>
                                     {
                                         cont.cards.map((card, cardIdx) => {
@@ -99,10 +105,12 @@ const WorkspaceScreen = ({ navigation }) => {
                                         })
                                     }
                                 </View>
-                                <Pressable style={{
-                                    marginTop: 25,
-                                    marginBottom: 15
-                                }}>
+                                <Pressable 
+                                    style={{
+                                        marginTop: 25,
+                                        marginBottom: 15
+                                    }}
+                                    onPress={() => setAddingCard(!addingCard)}>
                                     <Text style={{
                                         marginLeft: 10,
                                         color: "green"
@@ -115,7 +123,34 @@ const WorkspaceScreen = ({ navigation }) => {
 
                     : null
                 }
+
+                <Pressable 
+                    style={styles.addList}
+                    >
+                    <Text style={{color: "green", fontSize: 25}}>Ajouter une liste</Text>
+                </Pressable>
             </ScrollView>
+            </View>
+
+            {addingCard === true ?
+
+            <View style={{flexDirection: "row"}}>
+                <TextInput 
+                    placeholder="Coucou"
+                />
+                <Pressable>
+                    <Image 
+                        source={require('./../assets/svg/cancel.png')} 
+                        style={{height: 20, width: 20}}/>
+                </Pressable>
+            </View>
+            
+
+            : 
+            
+            <View style={{backgroundColor: "white", flex:1}}></View>}
+
+
 
             { showOptions === true ? 
                 <OptionScreen 
@@ -133,12 +168,14 @@ export default WorkspaceScreen;
 const styles = StyleSheet.create({
     global: {
         backgroundColor: constants.blue,
-        flex: 1
+        flex: 1,
+        marginBottom: 50
     },
 
     mainBody: {
-        // flex: 1,i
+
         backgroundColor: "white",
+        height: 150
     },
 
     card: {
@@ -149,5 +186,22 @@ const styles = StyleSheet.create({
         marginTop: 15,
         borderRadius: 5,
         height: 225
-    }
+    },
+
+    addList: {
+        backgroundColor: "white", 
+        alignItems: "center", 
+        justifyContent: "center", 
+        height: 50, 
+        marginTop: 15, 
+        width: 200,
+        marginRight: 20,
+        borderRadius: 5,
+        borderWidth: 1,
+        borderColor: "lightgrey",
+        fontSize: 20},
+
+        ScrollViewContainer: {
+            height: 275
+        }
 })
