@@ -50,13 +50,16 @@ const WorkspaceScreen = ({ navigation }) => {
     return (
         <SafeAreaView style={styles.global}>
             {
-                addingCard === false ? 
+                (addingCard === false && addingList === false) ? 
                 <HeaderScreen 
                 title={SELECTED} 
                 showOptions={showOptions} 
                 setShowOptions={setShowOptions}
-                optionKickingIn={optionKickingIn}/> :
+                optionKickingIn={optionKickingIn}/> : null
+            }
 
+            {
+                addingCard === true ? 
                 // Adding card header
                 <View style={{
                     flexDirection: 'row',
@@ -64,7 +67,9 @@ const WorkspaceScreen = ({ navigation }) => {
                     height: 60,
                     alignItems: 'center',
                 }}>
-                    <Pressable>
+                    <Pressable
+                        onPress={() => setAddingCard(false)}
+                    >
                         <Image source={require('./../assets/svg/cancel.png')} style={styles.png}/>
                     </Pressable>
 
@@ -79,7 +84,35 @@ const WorkspaceScreen = ({ navigation }) => {
                     <Pressable>
                     <Image source={require('./../assets/svg/check.png')} style={styles.png}/>
                     </Pressable>
-                </View>
+                </View> : null
+            }
+
+            {
+                addingList === true ? 
+                // Adding list header
+                <View style={{
+                    flexDirection: 'row',
+                    backgroundColor: constants.blue,
+                    height: 60,
+                    alignItems: 'center',
+                }}>
+                    <Pressable
+                        onPress={() => setAddingList(false)}>
+                        <Image source={require('./../assets/svg/cancel.png')} style={styles.png}/>
+                    </Pressable>
+
+                    <Text style={{
+                        color: "white",
+                        flex: 1,
+                        fontSize: 25,
+                        marginLeft: 20,
+                        alignSelf: "center"
+                    }}>Ajouter une liste...</Text>
+
+                    <Pressable>
+                    <Image source={require('./../assets/svg/check.png')} style={styles.png}/>
+                    </Pressable>
+                </View> : null
             }
             <View style={styles.ScrollViewContainer}>
             <ScrollView style={styles.mainBody} horizontal={true}>
@@ -164,11 +197,26 @@ const WorkspaceScreen = ({ navigation }) => {
                     : null
                 }
 
-                <Pressable 
-                    style={styles.addList}
-                    >
-                    <Text style={{color: "green", fontSize: 25}}>Ajouter une liste</Text>
-                </Pressable>
+                {
+                    addingList === false ? 
+
+                    <Pressable 
+                        style={styles.addList}
+                        onPress={() => setAddingList(true)}
+                        >
+                        <Text style={{color: "green", fontSize: 25}}>Ajouter une liste</Text>
+                    </Pressable> :
+
+                    <TextInput 
+                        style={styles.addListPlaceholder}
+                        placeholder="Ajouter une liste"
+                    />
+
+
+
+                }
+
+                
             </ScrollView>
             </View>
 
@@ -248,7 +296,6 @@ const styles = StyleSheet.create({
     global: {
         backgroundColor: constants.blue,
         flex: 1,
-        marginBottom: 50
     },
 
     mainBody: {
@@ -278,10 +325,27 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         borderWidth: 1,
         borderColor: "lightgrey",
-        fontSize: 20},
+        fontSize: 20
+    },
 
-        ScrollViewContainer: {
-            height: 275
+    addListPlaceholder: {
+        backgroundColor: "white", 
+        color: "green",
+        paddingLeft: 10,
+        alignItems: "center", 
+        justifyContent: "center", 
+        height: 50, 
+        marginTop: 15, 
+        width: 200,
+        marginRight: 20,
+        borderRadius: 5,
+        borderWidth: 1,
+        borderColor: "lightgrey",
+        fontSize: 20
+    },
+
+    ScrollViewContainer: {
+        height: 275
     },
 
     png: {
