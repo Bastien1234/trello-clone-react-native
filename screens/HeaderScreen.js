@@ -9,7 +9,7 @@ const HeaderScreen = ({ navigation, title, showOptions, setShowOptions, optionKi
     // const [showOptions, setShowOptions] = useState(false);
 
   return (
-    <SafeAreaView style={styles.header}>
+    <View style={styles.header}>
         <Pressable onPress={() => {
             setShowOptions(true);
             optionKickingIn();
@@ -26,7 +26,7 @@ const HeaderScreen = ({ navigation, title, showOptions, setShowOptions, optionKi
         <Pressable>
             <Image source={require('./../assets/svg/bell.png')} style={styles.png}/>
         </Pressable>
-    </SafeAreaView>
+    </View>
   )
 }
 
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     header: {
         flexDirection: 'row',
         backgroundColor: constants.blue,
-        height: 110,
+        height: 60,
         alignItems: 'center',
     },
 

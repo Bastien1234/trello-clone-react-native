@@ -10,7 +10,8 @@ import DB from './../fakeDB/db';
 const WorkspaceScreen = ({ navigation }) => {
 
     const [database, setDatabase] = useState({});
-    const [addingCard, setAddingCard] = useState(true);
+    const [addingCard, setAddingCard] = useState(false);
+    const [addingList, setAddingList] = useState(false);
 
     let SELECTED = "Espace 1" // to change that shit please !!!
 
@@ -28,10 +29,19 @@ const WorkspaceScreen = ({ navigation }) => {
     const [showOptions, setShowOptions] = useState(false);
 
     const optionAnim = useRef(new Animated.Value(0)).current;
+    const addCardAnim = useRef(new Animated.Value(0)).current;
 
     const optionKickingIn = () => {
         Animated.timing(optionAnim, {
             toValue : 4,
+            duration: 555,
+            useNativeDriver: false
+        }).start();
+    }
+
+    const newCardAnimation = () => {
+        Animated.timing(addCardAnim, {
+            toValue: 1,
             duration: 333,
             useNativeDriver: false
         }).start();
@@ -39,11 +49,38 @@ const WorkspaceScreen = ({ navigation }) => {
 
     return (
         <SafeAreaView style={styles.global}>
-            <HeaderScreen 
+            {
+                addingCard === false ? 
+                <HeaderScreen 
                 title={SELECTED} 
                 showOptions={showOptions} 
                 setShowOptions={setShowOptions}
-                optionKickingIn={optionKickingIn}/>
+                optionKickingIn={optionKickingIn}/> :
+
+                // Adding card header
+                <View style={{
+                    flexDirection: 'row',
+                    backgroundColor: constants.blue,
+                    height: 60,
+                    alignItems: 'center',
+                }}>
+                    <Pressable>
+                        <Image source={require('./../assets/svg/cancel.png')} style={styles.png}/>
+                    </Pressable>
+
+                    <Text style={{
+                        color: "white",
+                        flex: 1,
+                        fontSize: 25,
+                        marginLeft: 20,
+                        alignSelf: "center"
+                    }}>Ajouter une carte...</Text>
+
+                    <Pressable>
+                    <Image source={require('./../assets/svg/check.png')} style={styles.png}/>
+                    </Pressable>
+                </View>
+            }
             <View style={styles.ScrollViewContainer}>
             <ScrollView style={styles.mainBody} horizontal={true}>
                 {
@@ -110,7 +147,10 @@ const WorkspaceScreen = ({ navigation }) => {
                                         marginTop: 25,
                                         marginBottom: 15
                                     }}
-                                    onPress={() => setAddingCard(!addingCard)}>
+                                    onPress={() => {
+                                        setAddingCard(!addingCard)
+                                        newCardAnimation();
+                                    }}>
                                     <Text style={{
                                         marginLeft: 10,
                                         color: "green"
@@ -134,16 +174,55 @@ const WorkspaceScreen = ({ navigation }) => {
 
             {addingCard === true ?
 
-            <View style={{flexDirection: "row"}}>
-                <TextInput 
-                    placeholder="Coucou"
-                />
-                <Pressable>
-                    <Image 
-                        source={require('./../assets/svg/cancel.png')} 
-                        style={{height: 20, width: 20}}/>
-                </Pressable>
+            <View style={{
+                flex: 1,
+                backgroundColor: "white",
+            }}>
+                <Animated.View style={{
+                    opacity: addCardAnim,
+                }}>
+                    <View style={{
+                        flexDirection: "row", 
+                        justifyContent: "center", 
+                        alignItems: "center",
+                        paddingTop: 15,
+                        height: 60,
+                        fontSize: 25,
+                        }}>
+                        <TextInput 
+                            placeholder="Ajouter nouvelle carte..."
+                            style={{
+                                color: "green",
+                                backgroundColor: "lightgrey",
+                                borderRadius: 5,
+                                height: 45,
+                                paddingLeft: 10,
+                                width: 200,
+                                marginRight: 5,
+                            }}
+                        />
+                        <Pressable>
+                            <Image 
+                                source={require('./../assets/svg/cancel.png')} 
+                                style={{height: 20, width: 20}}/>
+                        </Pressable>
+                    </View>
+                    
+                    <Pressable style={{
+                        alignSelf: "center",
+                        marginTop: 10,
+                        backgroundColor: "lightgreen",
+                        width: 100,
+                        height: 35,
+                        borderRadius: 5,
+                        alignItems: "center",
+                        justifyContent: "center"
+                    }}>
+                        <Text>Ajouter</Text>
+                    </Pressable>
+                </Animated.View>
             </View>
+            
             
 
             : 
@@ -203,5 +282,14 @@ const styles = StyleSheet.create({
 
         ScrollViewContainer: {
             height: 275
-        }
+    },
+
+    png: {
+        height: constants.iconsSize,
+        width: constants.iconsSize,
+        tintColor: "white",
+        marginLeft: 10,
+        marginRight: 10,
+        alignSelf: "center"
+    },
 })
