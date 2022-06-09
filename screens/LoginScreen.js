@@ -7,6 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 import constants from '../constants/constants';
+const backendUrl = `${constants.URL}/api/v1/users/testServer`;
 
 const LoginScreen = ({ navigation }) => {
     // States for creating use
@@ -22,11 +23,13 @@ const LoginScreen = ({ navigation }) => {
 
     const signUp = async () => {
         try {
-            const response = await axios.post(constants.URL, newUser);
+            const response = await axios.get(backendUrl);
+            console.log(response)
             if (response.status === "success") {
                 navigation.navigate("Tableaux")
             }
         } catch(e) {
+            console.log("error : ", e.message)
             setBottomMessage(e.message);
         }
     }
