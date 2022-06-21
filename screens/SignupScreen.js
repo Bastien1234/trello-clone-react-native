@@ -1,49 +1,38 @@
 import { StyleSheet, Text, View, TextInput, Image, Pressable } from 'react-native';
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
-
-
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-
 import constants from '../constants/constants';
-const backendUrl = `${constants.URL}/api/v1/users/login`;
-
-import { UserContext } from './../context/userContext';
-
+const backendUrl = `${constants.URL}/api/v1/users/signup`;
 
 const LoginScreen = ({ navigation }) => {
-    const { userContext, setUserContext } = useContext(UserContext);
     // States for creating use
     const [newUser,setNewUser] = useState({
         email : "",
+        lastName: "",
+        firstName: "",
         password: "",
+        confirmPassword: "",
+        spaces: []
     })
     const [bottomMessage, setBottomMessage] = useState("");
     const [isLoading, setisLoading] = useState(false);
 
-    const login = async () => {
+    const signUp = async () => {
         try {
             const response = await axios.post(backendUrl, newUser);
-            if (response.status === 200) {
-                let currUser = response.data.user;
-                let newObj = {
-                    _id : currUser._id,
-                    email: currUser.email,
-                    firstName: currUser.firstName,
-                    lastName: currUser.lastName,
-                    spaces: currUser.spaces,
-                };
-                setUserContext(newObj);
-                setBottomMessage("Successully connected !")
+            console.log(response)
+            if (response.status === 201) {
+                setBottomMessage("Success !")
                 setTimeout(() => {
-                    navigation.navigate("Tableaux")
+                    navigation.navigate("Login")
                 }, 500)
                 
             }
         } catch(e) {
             console.log("error : ", e.message)
-            setBottomMessage("Wo wo wo !! problème !");
+            setBottomMessage(e.message);
         }
     }
 
@@ -57,7 +46,7 @@ const LoginScreen = ({ navigation }) => {
           <Text style={{
               fontSize: 25,
               color: "white"
-          }}>Se connecter</Text>
+          }}>Créer un compte</Text>
       </View>
 
       {/* Main body */}
@@ -80,7 +69,25 @@ const LoginScreen = ({ navigation }) => {
             }}
         />
 
-        
+        <TextInput 
+            placeholder='Last Name'
+            style={styles.placeholder}
+            value={newUser.lastName}
+            onChangeText={t => {
+                setNewUser({...newUser, lastName : t.toString().toLowerCase()})
+                console.log(newUser)
+            }}
+        />
+
+        <TextInput 
+            placeholder='First Name'
+            style={styles.placeholder}
+            value={newUser.firstName}
+            onChangeText={t => {
+                setNewUser({...newUser, firstName : t.toString().toLowerCase()})
+                console.log(newUser)
+            }}
+        />
 
         <TextInput 
             placeholder='Password'
@@ -93,6 +100,16 @@ const LoginScreen = ({ navigation }) => {
             }}
         />
 
+        <TextInput 
+            placeholder='Confirm Password'
+            style={styles.placeholder}
+            value={newUser.confirmPassword}
+            secureTextEntry={true}
+            onChangeText={t => {
+                setNewUser({...newUser, confirmPassword : t.toString().toLowerCase()})
+                console.log(newUser)
+            }}
+        />
       </View>
 
       <Pressable 
@@ -106,33 +123,13 @@ const LoginScreen = ({ navigation }) => {
             alignSelf: "center",
             marginTop: 10
         }}
-        onPress={() => login()}
+        onPress={() => signUp()}
       
       >
         <Text style={{
             fontSize: 20,
             color: "white"
-        }}>Log in</Text>
-      </Pressable >
-
-      <Pressable 
-        style={{
-            backgroundColor: constants.blue,
-            height: 50,
-            width: 200,
-            borderRadius: 10,
-            justifyContent: "center",
-            alignItems: "center",
-            alignSelf: "center",
-            marginTop: 10
-        }}
-        onPress={() => navigation.navigate("Signup")}
-      
-      >
-        <Text style={{
-            fontSize: 20,
-            color: "white"
-        }}>Créer un compte</Text>
+        }}>S'enregistrer</Text>
       </Pressable >
 
       <Text style={{
