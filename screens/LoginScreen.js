@@ -24,6 +24,8 @@ const LoginScreen = ({ navigation }) => {
 
     const login = async () => {
         try {
+            newUser.email = newUser.email.toString().toLowerCase();
+            newUser.password = newUser.password.toString().toLowerCase();
             const response = await axios.post(backendUrl, newUser);
             if (response.status === 200) {
                 let currUser = response.data.user;
@@ -75,7 +77,7 @@ const LoginScreen = ({ navigation }) => {
             style={styles.placeholder}
             value={newUser.email}
             onChangeText={t => {
-                setNewUser({...newUser, email : t.toString().toLowerCase()})
+                setNewUser({...newUser, email : t})
                 console.log(newUser)
             }}
         />
@@ -88,7 +90,7 @@ const LoginScreen = ({ navigation }) => {
             value={newUser.password}
             secureTextEntry={true}
             onChangeText={t => {
-                setNewUser({...newUser, password : t.toString().toLowerCase()})
+                setNewUser({...newUser, password : t.toString()})
                 console.log(newUser)
             }}
         />

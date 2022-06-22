@@ -1,5 +1,5 @@
 import React, { useState, useRef, useContext } from 'react';
-import { StyleSheet, Text, View, Image, TextInput, Pressable, Animated } from 'react-native';
+import { StyleSheet, Text, View, Image, TextInput, Pressable, Animated, DevSettings } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import constants from '../constants/constants';
 import HeaderScreen from './HeaderScreen';
@@ -10,12 +10,36 @@ import DB from './../fakeDB/db';
 
 import { UserContext } from './../context/userContext';
 
-const LogScreen = ({ navigation }) => {
+const TableauxScreen = ({ navigation }) => {
 
     const { userContext, setUserContext } = useContext(UserContext);
 
+    let listOfTableaux = [];
+    userContext.spaces.forEach(el => {
+        listOfTableaux.push(el.name);
+    });
+
+    const [tableauxState, setTableauxState] = useState(listOfTableaux);
+
+    const addSpace = async () => {
+        try {
+            const response = await axios.post(constants.URL+"/api/v1/users/addWorkspace", {
+                name: newSpaceName,
+                id: userContext._id
+            })
+
+            console.log(response)
+            const newTabby = [...tableauxState].push(newSpaceName);
+            setTableauxState(newTabby)
+        } catch (e) {
+            console.log(e.message)
+        }
+    }
+
     const [showOptions, setShowOptions] = useState(false);
     const [showNew, setShowNew] = useState(true);
+    const [newSpaceName, setNewSpaceName] = useState("");
+
 
     const optionAnim = useRef(new Animated.Value(0)).current;
 
@@ -39,13 +63,13 @@ const LogScreen = ({ navigation }) => {
                 {
                     // Populate from DB
 
-                    DB.map((el, idx) => {
+                    tableauxState.map((el, idx) => {
                         return(
                                 <Pressable style={styles.workspace} key={idx}>
                                     <Image 
                                         style={styles.workspaceImage}
                                         source={require("./../assets/images/motocross.jpg")} />
-                                    <Text style={styles.workspaceText}>{el.name}</Text>
+                                    <Text style={styles.workspaceText}>{el}</Text>
                                 </Pressable>
                             )
                     })
@@ -57,7 +81,12 @@ const LogScreen = ({ navigation }) => {
                 <View style={styles.addGlobal}>
                     <Text style={styles.subTitle}>Ajouter un espace de travail</Text>
                     <TextInput 
-                        placeholder="nouvel espace"
+                        placeholder="Nouvel espace"
+                        value={newSpaceName}
+                        onChangeText={t => {
+                            setNewSpaceName(t)
+                            console.log(newSpaceName)
+                        }}
                         style={{
                             height: 40,
                             width: "90%",
@@ -72,7 +101,8 @@ const LogScreen = ({ navigation }) => {
                         justifyContent: "center"
                     }}>
                         <Pressable 
-                            style={styles.btn}>
+                            style={styles.btn}
+                            onPress={() => addSpace()}>
                             <Text style={styles.btnText}>Ajouter</Text>
                         </Pressable>
                         <Pressable 
@@ -127,7 +157,7 @@ const LogScreen = ({ navigation }) => {
     )
 }
 
-export default LogScreen;
+export default TableauxScreen;
 
 const styles = StyleSheet.create({
     global: {
