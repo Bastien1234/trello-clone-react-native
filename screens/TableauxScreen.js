@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext } from 'react';
+import React, { useState, useRef, useContext, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, TextInput, Pressable, Animated, DevSettings } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import constants from '../constants/constants';
@@ -13,13 +13,7 @@ import { UserContext } from './../context/userContext';
 const TableauxScreen = ({ navigation }) => {
 
     const { userContext, setUserContext } = useContext(UserContext);
-
-    let listOfTableaux = [];
-    userContext.spaces.forEach(el => {
-        listOfTableaux.push(el.name);
-    });
-
-    const [tableauxState, setTableauxState] = useState(listOfTableaux);
+    const [copyState, setCopyState] = useState(userContext);
 
     const addSpace = async () => {
         try {
@@ -29,8 +23,19 @@ const TableauxScreen = ({ navigation }) => {
             })
 
             console.log(response)
-            const newTabby = [...tableauxState].push(newSpaceName);
-            setTableauxState(newTabby)
+
+            if (response.status === 200) {
+                userContext.spaces.push({
+                    name: newSpaceName,
+                    containers: []
+                })
+                console.log("before\n", copyState);
+                setCopyState({...copyState, spaces: [...copyState.spaces, {
+                    name: newSpaceName,
+                    containers: []
+                }]})
+                console.log("after\n", copyState)
+            }
         } catch (e) {
             console.log(e.message)
         }
@@ -63,13 +68,13 @@ const TableauxScreen = ({ navigation }) => {
                 {
                     // Populate from DB
 
-                    tableauxState.map((el, idx) => {
+                    copyState.spaces.map((el, idx) => {
                         return(
                                 <Pressable style={styles.workspace} key={idx}>
                                     <Image 
                                         style={styles.workspaceImage}
                                         source={require("./../assets/images/motocross.jpg")} />
-                                    <Text style={styles.workspaceText}>{el}</Text>
+                                    <Text style={styles.workspaceText}>{el.name}</Text>
                                 </Pressable>
                             )
                     })
