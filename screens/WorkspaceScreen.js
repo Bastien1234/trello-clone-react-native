@@ -1,29 +1,38 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import { StyleSheet, Text, View, Image, TextInput, Pressable, Animated, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import constants from '../constants/constants';
 import HeaderScreen from './HeaderScreen';
 import OptionScreen from './OptionScreen';
+import axios from 'axios';
+
+import { UserContext } from './../context/userContext';
 
 import DB from './../fakeDB/db';
 
-const WorkspaceScreen = ({ navigation }) => {
+const WorkspaceScreen = ({ route, navigation }) => {
+
+    const { userContext, setUserContext } = useContext(UserContext);
 
     const [database, setDatabase] = useState({});
     const [addingCard, setAddingCard] = useState(false);
     const [addingList, setAddingList] = useState(false);
+    const [newListName, setNewListName] = useState("");
 
-    let SELECTED = "Espace 1" // to change that shit please !!!
+    const { selectedSpace } = route.params;
+
+    let SELECTED = selectedSpace // to change that shit please !!!
 
     useEffect(() => {
-        const DBcopy = DB[0];
-        DBcopy.spaces.forEach(el => {
+        DB[0].spaces.forEach(el => {
             if (el.name === SELECTED) {
                 setDatabase(el);
             }
         })
-        console.log(database)
+        
     }, [])
+
+    console.log("database", database)
 
 
     const [showOptions, setShowOptions] = useState(false);
@@ -45,6 +54,38 @@ const WorkspaceScreen = ({ navigation }) => {
             duration: 333,
             useNativeDriver: false
         }).start();
+    }
+
+    const addContainer = async (name) => {
+        try {
+            const newObj = {
+                currentWorkspace: selectedSpace,
+                id: userContext._id,
+                containerName: name
+            }
+            const response = await axios.post(`${constants.URL}/api/v1/users/addContainer`, newObj)
+            let rightContext;
+            if (response.status === 200) {
+                
+                console.log(userContext.spaces)
+                userContext.spaces.forEach(el => {
+                    if (el.name===selectedSpace) {
+                        rightContext = el;
+                        el.containers.push({
+                            currentWorkspace: selectedSpace,
+                            containerName: name
+                        })
+                    }
+                })
+                console.log("context space : \n", userContext.spaces)
+            }
+
+            setDatabase({...rightContext})
+            setAddingList(false);
+        } catch (e) {
+            console.log(e.message);
+            setAddingList(false);
+        }
     }
 
     return (
@@ -109,8 +150,11 @@ const WorkspaceScreen = ({ navigation }) => {
                         alignSelf: "center"
                     }}>Ajouter une liste...</Text>
 
-                    <Pressable>
-                    <Image source={require('./../assets/svg/check.png')} style={styles.png}/>
+                    <Pressable
+                        onPress={() => {
+                            addContainer(newListName);
+                        }}>
+                        <Image source={require('./../assets/svg/check.png')} style={styles.png}/>
                     </Pressable>
                 </View> : null
             }
@@ -210,6 +254,8 @@ const WorkspaceScreen = ({ navigation }) => {
                     <TextInput 
                         style={styles.addListPlaceholder}
                         placeholder="Ajouter une liste"
+                        value={newListName}
+                        onChangeText={t => {setNewListName(t); console.log(newListName)}}
                     />
 
 

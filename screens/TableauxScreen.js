@@ -1,20 +1,32 @@
 import React, { useState, useRef, useContext, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, TextInput, Pressable, Animated, DevSettings } from 'react-native';
+import { StyleSheet, Text, View, Image, TextInput, Pressable, Animated, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import constants from '../constants/constants';
 import HeaderScreen from './HeaderScreen';
 import OptionScreen from './OptionScreen';
 import axios from 'axios';
 
-import DB from './../fakeDB/db';               
+import DB from './../fakeDB/db';        
+
+import cancelSvg from './../assets/svg/cancel.png';
 
 import { UserContext } from './../context/userContext';
 
 const TableauxScreen = ({ navigation }) => {
 
     const { userContext, setUserContext } = useContext(UserContext);
-    const [copyState, setCopyState] = useState(userContext);
+    const [listOfNames, setListOfNames] = useState([]);
 
+    useEffect(() => {
+        const spaceList = [];
+        userContext.spaces.forEach(el => {
+            spaceList.push(el.name)
+        });
+
+        setListOfNames(spaceList);
+    }, [userContext])
+
+    
     const addSpace = async () => {
         try {
             const response = await axios.post(constants.URL+"/api/v1/users/addWorkspace", {
@@ -29,12 +41,43 @@ const TableauxScreen = ({ navigation }) => {
                     name: newSpaceName,
                     containers: []
                 })
-                console.log("before\n", copyState);
-                setCopyState({...copyState, spaces: [...copyState.spaces, {
-                    name: newSpaceName,
-                    containers: []
-                }]})
-                console.log("after\n", copyState)
+
+                setListOfNames([...listOfNames, newSpaceName])
+            }
+            setShowNew(false);
+        } catch (e) {
+            console.log(e.message);
+            setShowNew(false);
+        }
+    }
+
+    const deleteSpace = async (spaceName) => {
+        try {
+            const response = await axios.post(constants.URL+"/api/v1/users/deleteWorkspace", {
+                spaceName,
+                email: userContext.email
+            })
+
+            console.log(response)
+
+            if (response.status === 200) {
+                let newSpaces = [];
+                userContext.spaces.forEach(el => {
+                    if (el.name !== spaceName) {
+                        newSpaces.push(el);
+                    }
+                })
+
+                userContext.spaces = newSpaces;
+
+                const spaceList = [];
+                userContext.spaces.forEach(el => {
+                    spaceList.push(el.name)
+                });
+
+
+
+                setListOfNames([...spaceList]);
             }
         } catch (e) {
             console.log(e.message)
@@ -42,7 +85,7 @@ const TableauxScreen = ({ navigation }) => {
     }
 
     const [showOptions, setShowOptions] = useState(false);
-    const [showNew, setShowNew] = useState(true);
+    const [showNew, setShowNew] = useState(false);
     const [newSpaceName, setNewSpaceName] = useState("");
 
 
@@ -63,19 +106,39 @@ const TableauxScreen = ({ navigation }) => {
                 showOptions={showOptions} 
                 setShowOptions={setShowOptions}
                 optionKickingIn={optionKickingIn}/>
-            <View style={styles.mainBody}>
+            <ScrollView style={styles.mainBody}>
                 <Text style={styles.subTitle}>Espace de travail Trello</Text>
                 {
                     // Populate from DB
 
-                    copyState.spaces.map((el, idx) => {
+                    listOfNames.map((el, idx) => {
                         return(
-                                <Pressable style={styles.workspace} key={idx}>
-                                    <Image 
-                                        style={styles.workspaceImage}
-                                        source={require("./../assets/images/motocross.jpg")} />
-                                    <Text style={styles.workspaceText}>{el.name}</Text>
-                                </Pressable>
+                                <View style={{
+                                    flexDirection: "row",
+                                    width: "100%"
+                                }}
+                                key={idx}>
+                                    <Pressable 
+                                        onPress={() => {
+                                            navigation.navigate('Workspace', {
+                                                selectedSpace: el
+                                            })
+                                        }}
+                                        style={styles.workspace} 
+                                        key={idx}>
+                                        <Image 
+                                            style={styles.workspaceImage}
+                                            source={require("./../assets/images/motocross.jpg")} />
+                                        <Text style={styles.workspaceText}>{el}</Text>
+                                    </Pressable>
+                                    <Pressable 
+                                        onPress={() => {
+                                            deleteSpace(el);
+                                        }}
+                                        style={styles.cross}>
+                                        <Image source={cancelSvg} style={styles.crossSvg}/>
+                                    </Pressable>
+                                </View>
                             )
                     })
                 }
@@ -118,7 +181,7 @@ const TableauxScreen = ({ navigation }) => {
                     </View>
                 </View> : null
             }
-            </View>
+            </ScrollView>
 
             
             
@@ -184,6 +247,7 @@ const styles = StyleSheet.create({
 
     workspace: {
         flexDirection: "row",
+        flex: 1,
         backgroundColor: "lightgrey",
         marginBottom: 10,
         height: 65,
@@ -205,6 +269,24 @@ const styles = StyleSheet.create({
         marginLeft: 15,
         fontSize: 20
     },
+
+    cross: {
+        backgroundColor: "lightgrey",
+        marginBottom: 10,
+        height: 65,
+        alignItems: "center",
+        borderTopWidth: 1,
+        borderBottomWidth: 1,
+        borderTopColor: "grey",
+        borderBottomColor: "grey",
+        justifyContent: "center",
+        paddingRight: 15
+    },
+
+    crossSvg: {
+        height: 25,
+        width: 25,
+    },  
 
     addGlobal: {
 
