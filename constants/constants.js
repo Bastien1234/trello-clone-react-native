@@ -1,5 +1,5 @@
 const constants = {
-    URL: "http://localhost:8000",
+    URL: "http://127.0.0.1:8000",
     blue: "rgb(0, 110, 183)",
     iconsSize: 25,
     headerHeight: 60,

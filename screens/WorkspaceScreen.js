@@ -70,14 +70,13 @@ const WorkspaceScreen = ({ route, navigation }) => {
                 console.log(userContext.spaces)
                 userContext.spaces.forEach(el => {
                     if (el.name===selectedSpace) {
-                        rightContext = el;
                         el.containers.push({
-                            currentWorkspace: selectedSpace,
-                            containerName: name
+                            title: name,
+                            cards: []
                         })
+                        rightContext = el;
                     }
                 })
-                console.log("context space : \n", userContext.spaces)
             }
 
             setDatabase({...rightContext})
@@ -85,6 +84,37 @@ const WorkspaceScreen = ({ route, navigation }) => {
         } catch (e) {
             console.log(e.message);
             setAddingList(false);
+        }
+    }
+
+    const deleteContainer = async (name) => {
+        try {
+            const newObj = {
+                currentWorkspace: selectedSpace,
+                id: userContext._id,
+                containerName: name
+            }
+            const response = await axios.post(`${constants.URL}/api/v1/users/addContainer`, newObj);
+
+            let rightContext;
+
+            if (response.status === 200) {
+                console.log(userContext.spaces)
+                userContext.spaces.forEach(el => {
+                    if (el.name===selectedSpace) {
+                        let filtered = el.containers.filter(container => {
+                            container.title !== name
+                        })
+                        el.containers = filtered;
+                        rightContext = el;
+                    }
+                })
+            }
+
+            setDatabase({...rightContext})
+
+        } catch (err) {
+            console.log("Error message : ", err.message)
         }
     }
 
@@ -162,8 +192,13 @@ const WorkspaceScreen = ({ route, navigation }) => {
             <ScrollView style={styles.mainBody} horizontal={true}>
                 {
                     database["containers"] ? 
+
+                    
                     
                     database.containers.map((cont, idx) => {
+
+                        console.log("before error\n", database)
+
                         return(
                             <View style={styles.card} key={idx}>
                                 <View style={{flexDirection: "row", alignItems: "center", justifyContent: "space-between"}}>
