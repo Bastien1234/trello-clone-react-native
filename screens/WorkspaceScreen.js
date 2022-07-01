@@ -21,8 +21,8 @@ const WorkspaceScreen = ({ route, navigation }) => {
 
     const { selectedSpace } = route.params;
 
-    let SELECTED = selectedSpace // to change that shit please !!!
-
+    let SELECTED = selectedSpace;
+    
     useEffect(() => {
         DB[0].spaces.forEach(el => {
             if (el.name === SELECTED) {
@@ -31,8 +31,6 @@ const WorkspaceScreen = ({ route, navigation }) => {
         })
         
     }, [])
-
-    console.log("database", database)
 
 
     const [showOptions, setShowOptions] = useState(false);
@@ -66,8 +64,6 @@ const WorkspaceScreen = ({ route, navigation }) => {
             const response = await axios.post(`${constants.URL}/api/v1/users/addContainer`, newObj)
             let rightContext;
             if (response.status === 200) {
-                
-                console.log(userContext.spaces)
                 userContext.spaces.forEach(el => {
                     if (el.name===selectedSpace) {
                         el.containers.push({
@@ -94,18 +90,15 @@ const WorkspaceScreen = ({ route, navigation }) => {
                 id: userContext._id,
                 containerName: name
             }
-            const response = await axios.post(`${constants.URL}/api/v1/users/addContainer`, newObj);
+            const response = await axios.post(`${constants.URL}/api/v1/users/deleteContainer`, newObj);
 
             let rightContext;
 
             if (response.status === 200) {
-                console.log(userContext.spaces)
+                console.log("RESPONSE : ", response.data.data)
                 userContext.spaces.forEach(el => {
                     if (el.name===selectedSpace) {
-                        let filtered = el.containers.filter(container => {
-                            container.title !== name
-                        })
-                        el.containers = filtered;
+                        el.containers = response.data.data;
                         rightContext = el;
                     }
                 })
@@ -197,8 +190,6 @@ const WorkspaceScreen = ({ route, navigation }) => {
                     
                     database.containers.map((cont, idx) => {
 
-                        console.log("before error\n", database)
-
                         return(
                             <View style={styles.card} key={idx}>
                                 <View style={{flexDirection: "row", alignItems: "center", justifyContent: "space-between"}}>
@@ -210,7 +201,11 @@ const WorkspaceScreen = ({ route, navigation }) => {
                                             marginBottom: 20
                                         }}
                                     >{cont.title}</Text>
-                                    <Image source={require('./../assets/svg/cancel.png')} style={{height: 20, width: 20, marginRight: 15}}/>
+                                    <Pressable onPress={() => {
+                                        deleteContainer(cont);
+                                    }}>
+                                        <Image source={require('./../assets/svg/cancel.png')} style={{height: 20, width: 20, marginRight: 15}}/>
+                                    </Pressable>
                                 </View>
                                 
                                 <View>
