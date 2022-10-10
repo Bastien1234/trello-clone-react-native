@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TextInput, Image, Pressable } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Image, Pressable, Keyboard } from 'react-native';
 import React, { useState } from 'react';
 import axios from 'axios';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -7,6 +7,7 @@ import constants from '../constants/constants';
 const backendUrl = `${constants.URL}/api/v1/users/signup`;
 
 const LoginScreen = ({ navigation }) => {
+    const sign = "<";
     // States for creating use
     const [newUser,setNewUser] = useState({
         email : "",
@@ -33,6 +34,8 @@ const LoginScreen = ({ navigation }) => {
         } catch(e) {
             console.log("error : ", e.message)
             setBottomMessage(e.message);
+        } finally {
+            Keyboard.dismiss();
         }
     }
 
@@ -43,9 +46,25 @@ const LoginScreen = ({ navigation }) => {
     }}>
       {/* Header */}
       <View style={styles.header}>
+        <Pressable 
+            style={{
+            marginLeft: 15,
+            
+            }}
+            onPress={() => {
+                console.log("hey")
+                navigation.navigate("Login");
+            }}
+            >
+            <Text style={{
+               fontSize: 25,
+               color: "white" 
+            }}>{sign}</Text>
+        </Pressable>
           <Text style={{
               fontSize: 25,
-              color: "white"
+              color: "white",
+              marginRight: 100
           }}>Créer un compte</Text>
       </View>
 
@@ -148,8 +167,9 @@ const styles = StyleSheet.create({
     header: {
         backgroundColor: constants.blue,
         height: constants.headerHeight,
-        justifyContent: "center",
-        alignItems: "center"
+        justifyContent: "space-between",
+        alignItems: "center",
+        flexDirection: "row",
     },
 
     main: {

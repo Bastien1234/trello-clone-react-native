@@ -18,6 +18,7 @@ const WorkspaceScreen = ({ route, navigation }) => {
     const [addingCard, setAddingCard] = useState(false);
     const [addingList, setAddingList] = useState(false);
     const [newListName, setNewListName] = useState("");
+    const [newCardName, setNewCardName] = useState("");
 
     const { selectedSpace } = route.params;
 
@@ -111,6 +112,37 @@ const WorkspaceScreen = ({ route, navigation }) => {
         }
     }
 
+    const addCard = async (name) => {
+        try {
+            const newObj = {
+                currentWorkspace: selectedSpace,
+                id: userContext._id,
+                containerName: name,
+                cardName: name,
+            }
+            const response = await axios.post(`${constants.URL}/api/v1/users/addCard`, newObj)
+            let rightContext;
+            if (response.status === 200) {
+                userContext.spaces.forEach(el => {
+                    if (el.name===selectedSpace) {
+                        el.containers.forEach(cont => {
+                            if (cont.title === containerName) {
+                                cont.cards.push(newObj);
+                            }
+                        })
+                        rightContext = el;
+                    }
+                })
+            }
+
+            setDatabase({...rightContext})
+            setAddingList(false);
+        } catch (e) {
+            console.log(e.message);
+            setAddingList(false);
+        }
+    }
+
     return (
         <SafeAreaView style={styles.global}>
             {
@@ -145,8 +177,12 @@ const WorkspaceScreen = ({ route, navigation }) => {
                         alignSelf: "center"
                     }}>Ajouter une carte...</Text>
 
-                    <Pressable>
-                    <Image source={require('./../assets/svg/check.png')} style={styles.png}/>
+                    <Pressable
+                        onPress={() => {
+                            addCard(newListName);
+                        }}
+                    >
+                        <Image source={require('./../assets/svg/check.png')} style={styles.png}/>
                     </Pressable>
                 </View> : null
             }
@@ -341,7 +377,11 @@ const WorkspaceScreen = ({ route, navigation }) => {
                         borderRadius: 5,
                         alignItems: "center",
                         justifyContent: "center"
-                    }}>
+                    }}
+                        onPress={() => {
+                            addCard(newCardname);
+                        }}
+                    >
                         <Text>Ajouter</Text>
                     </Pressable>
                 </Animated.View>

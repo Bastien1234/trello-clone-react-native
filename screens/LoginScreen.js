@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TextInput, Image, Pressable } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Image, Pressable, Keyboard } from 'react-native';
 import React, { useState, useContext } from 'react';
 import axios from 'axios';
 
@@ -46,6 +46,8 @@ const LoginScreen = ({ navigation }) => {
         } catch(e) {
             console.log("error : ", e.message)
             setBottomMessage("Wo wo wo !! problème !");
+        } finally {
+            keyboard.dismiss();
         }
     }
 

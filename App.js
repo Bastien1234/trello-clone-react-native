@@ -20,7 +20,7 @@ export default function App() {
   return (
     <UserContext.Provider value={value}>
       <NavigationContainer>
-        <Stack.Navigator  initialRouteName="Login">
+        <Stack.Navigator  initialRouteName="Tableaux">
           <Stack.Screen name="Tableaux" component={TableauxScreen} options={{ headerShown: false }}/>
           <Stack.Screen name="Workspace" component={WorkspaceScreen} options={{ headerShown: false }}/>
           <Stack.Screen name="Card" component={CardScreen} options={{ headerShown: false }}/>

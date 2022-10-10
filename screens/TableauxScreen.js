@@ -17,9 +17,20 @@ const TableauxScreen = ({ navigation }) => {
     const { userContext, setUserContext } = useContext(UserContext);
     const [listOfNames, setListOfNames] = useState([]);
 
+    // useEffect(() => {
+    //     const spaceList = [];
+    //     userContext.spaces.forEach(el => {
+    //         spaceList.push(el.name)
+    //     });
+
+    //     setListOfNames(spaceList);
+    // }, [userContext])
+
+    // debug
+
     useEffect(() => {
         const spaceList = [];
-        userContext.spaces.forEach(el => {
+        DB[0].spaces.forEach(el => {
             spaceList.push(el.name)
         });
 
